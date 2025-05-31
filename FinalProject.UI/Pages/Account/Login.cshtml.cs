@@ -5,7 +5,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
-namespace HMS.Pages.Account
+namespace FinalProject.UI.Pages.Account
 {
     public class LoginModel : PageModel
     {
@@ -26,8 +26,8 @@ namespace HMS.Pages.Account
         public async Task<IActionResult> OnPostAsync()
         {
             // Placeholder user authentication logic
-            if ((Username == "admin" && Password == "admin123") ||
-                (Username == "reception" && Password == "reception123"))
+            if (Username == "admin" && Password == "admin123" ||
+                Username == "reception" && Password == "reception123")
             {
                 var role = Username == "admin" ? "Admin" : "Receptionist";
 
@@ -42,7 +42,7 @@ namespace HMS.Pages.Account
 
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
-                return RedirectToPage(role == "Admin" ? "/Dashboard/Admin" : "/Dashboard/FrontDesk");
+                return RedirectToPage(role == "Admin" ? "/DashBoard/Admin" : "/DashBoard/FrontDesk");
             }
 
             ErrorMessage = "Invalid username or password.";

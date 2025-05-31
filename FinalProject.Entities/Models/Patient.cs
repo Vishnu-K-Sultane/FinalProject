@@ -25,6 +25,8 @@ namespace FinalProject.Entities.Models
         public string Symptoms { get; set; } = string.Empty;
 
         public DateTime AdmissionDateTime { get; set; }
+        [Column(TypeName = "decimal(18,2)")]
+        [Range(0, double.MaxValue, ErrorMessage = "Initial deposit must be a positive number.")]
         public decimal InitialDeposit { get; set; }
 
         [ForeignKey(nameof(Room))]

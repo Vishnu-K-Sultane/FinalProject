@@ -5,8 +5,8 @@ namespace FinalProject.Shared
 {
     // Data transfer object for Room
     public record RoomDto(
-
         // Unique identifier for the room
+
         int RoomId,
 
         // Room number (required)

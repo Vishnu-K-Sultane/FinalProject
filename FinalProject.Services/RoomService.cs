@@ -97,7 +97,7 @@ namespace FinalProject.Services
             var room = _repository.Room.GetRoomById(id, trackChanges);
             if (room == null) throw new Exception("Room not found");
 
-            _repository.Room.DeleteRoom(room);
+             _repository.Room.DeleteRoom(room);
             _repository.Save();
         }
     }

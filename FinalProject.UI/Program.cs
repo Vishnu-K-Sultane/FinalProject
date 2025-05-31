@@ -1,43 +1,90 @@
+using FinalProject.Contracts;
+using FinalProject.LoggerService;
+using FinalProject.Repository;
+using FinalProject.Service.Contract;
+using FinalProject.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 
+// Authentication configuration
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
         options.LoginPath = "/Account/Login";
+        options.LogoutPath = "/Account/Logout";
         options.AccessDeniedPath = "/Account/AccessDenied";
     });
 
+// Session configuration
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);  // Session timeout
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;  // Required for GDPR compliance if applicable
+});
 
+// Register your EF Core DbContext here
+builder.Services.AddDbContext<RepositoryContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Register repositories and services
+builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
+builder.Services.AddScoped<ILoggerManager, LoggerManager>();
+builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+builder.Services.AddScoped<IRoomService, RoomService>();
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();  // Add other services here
+
+// Add AutoMapper
+builder.Services.AddAutoMapper(typeof(FinalProject.Web.API.MappingProfile));
+
+// Add Authorization configuration
 builder.Services.AddAuthorization();
+//to checke login
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
-app.UseAuthentication();
-app.UseAuthorization();
+// Middleware order is critical!
 
-
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    app.UseHsts();  // Strict HTTP Security
 }
-
-builder.Services.AddAuthorization();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
+// Prevent caching of authenticated pages
+app.Use(async (context, next) =>
+{
+    await next();
+
+    if (context.User.Identity?.IsAuthenticated == true)
+    {
+        context.Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
+        context.Response.Headers["Pragma"] = "no-cache";
+        context.Response.Headers["Expires"] = "0";
+    }
+});
+
+// Routing
 app.UseRouting();
 
+// Add session BEFORE authentication and authorization
+app.UseSession();
+
+// Authentication & Authorization middlewares
+app.UseAuthentication();
 app.UseAuthorization();
 
+// Mapping Razor Pages
 app.MapRazorPages();
 
 app.Run();
