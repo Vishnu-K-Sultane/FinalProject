@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] - Hospital Management</title>
+
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+    <!-- Header -->
+    <header class="bg-primary text-white">
+        <div class="container-fluid">
+            <nav class="navbar navbar-expand-lg navbar-dark">
+                <a class="navbar-brand" asp-page="/Dashboard/FrontDesk">
+                    <img src="~/images/logo.png" alt="Logo" height="40" class="d-inline-block align-text-top" />
+                    Hospital Management System
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        @if (User.IsInRole("Receptionist"))
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-page="/Patients/Add">Add Patient</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-page="/Patients/View">View Patients</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-page="/Patients/Update">Update Patient</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-page="/Patients/Discharge">Discharge</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-page="/Rooms/View">View Rooms</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-page="/Departments/View">Departments</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-page="/Employees/View">Employees</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-page="/Ambulance/Search">Search Ambulance</a></li>
+                        }
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-page="/Rooms/Add">Add Room</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-page="/Rooms/Update">Update Room</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-page="/Employees/Add">Add Employee</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-page="/Ambulance/Add">Add Ambulance</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-page="/Ambulance/Update">Update Ambulance</a></li>
+                        }
+                        <li class="nav-item">
+                            <form method="post" asp-page="/Account/Logout" class="d-inline">
+                                <button type="submit" class="btn btn-link nav-link">Logout</button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container-fluid flex-grow-1 py-4">
+        <div class="container bg-white rounded shadow-sm p-4">
+            @RenderBody()
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-light text-center text-muted py-3 mt-auto border-top">
+        <div class="container-fluid">
+            <p class="mb-0">© 2025 HospitalMS. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

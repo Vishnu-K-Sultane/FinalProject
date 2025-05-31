@@ -1,0 +1,48 @@
+﻿@page
+@using HMS.UI.Pages
+@model IndexModel
+@{
+    ViewData["Title"] = "Welcome to Hospital Management System";
+}
+
+<div class="text-center mb-5">
+    <h1 class="display-4">🏥 Hospital Management System</h1>
+    <p class="lead text-muted">Efficiently manage hospital operations, staff, patients, and resources.</p>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h4 class="card-title text-primary">👩‍⚕️ Front Desk / Receptionist Features</h4>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Add new patients with ID and admission info</li>
+                    <li class="list-group-item">View and search room availability</li>
+                    <li class="list-group-item">View departments and employees</li>
+                    <li class="list-group-item">Discharge patients with timestamps</li>
+                    <li class="list-group-item">Update patient billing and room info</li>
+                    <li class="list-group-item">Search ambulance availability</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h4 class="card-title text-success">👨‍💼 Administrator Features</h4>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Add / Update / Remove Rooms</li>
+                    <li class="list-group-item">Manage Department and Employee records</li>
+                    <li class="list-group-item">Add and update Ambulance details</li>
+                    <li class="list-group-item">View employees by department</li>
+                    <li class="list-group-item">System-wide control and data access</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="text-center mt-5">
+    <a asp-page="/Account/Login" class="btn btn-lg btn-primary px-5">Login to System</a>
+</div>
