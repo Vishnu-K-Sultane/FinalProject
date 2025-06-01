@@ -35,7 +35,7 @@
     </div>
 
     <div class="mb-3">
-        <label asp-for="DepartmentId" class="form-label"></label>
+        <label  class="form-label">Department Name</label>
         <select asp-for="DepartmentId" class="form-control"
                 asp-items="@(new SelectList(departments, "DepartmentId", "DeptName"))">
             <option value="">-- Select Department --</option>

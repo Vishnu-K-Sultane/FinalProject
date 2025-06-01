@@ -1,16 +1,24 @@
 using FinalProject.Contracts;
 using FinalProject.LoggerService;
 using FinalProject.Repository;
+using FinalProject.Repository.Configuration;
 using FinalProject.Service.Contract;
 using FinalProject.Services;
+using FinalProject.UI.Models.Account;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddControllersWithViews(); // Add MVC services
-builder.Services.AddRazorPages();
+// Register UserConfiguration
+//builder.Services.Configure<UserConfigurationDetail>(builder.Configuration.GetSection("UsersDetail"));
+builder.Services.AddSingleton<UserConfigurationDetail>();
+
+// Add MVC services
+builder.Services.AddControllersWithViews();
+// Razor Pages
+//builder.Services.AddRazorPages();
 
 // Authentication configuration
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -91,6 +99,6 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 // Mapping Razor Pages
-app.MapRazorPages();
+//app.MapRazorPages();
 
 app.Run();

@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
-namespace FinalProject.UI.Models
-{
+namespace FinalProject.UI
+{ 
     public class LoginViewModel
     {
 
