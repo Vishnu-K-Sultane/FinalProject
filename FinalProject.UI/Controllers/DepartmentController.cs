@@ -113,7 +113,7 @@ namespace FinalProject.UI.Controllers
         {
             try
             {
-                _departmentService.DeleteDepartment(id, trackChanges: false);
+                _departmentService.DeleteDepartment(id, trackChanges: true);
                 return RedirectToAction(nameof(Index));
             }
             catch (KeyNotFoundException)

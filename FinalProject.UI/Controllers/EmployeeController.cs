@@ -22,32 +22,8 @@ namespace FinalProject.UI.Controllers
         // GET: Employee
         public IActionResult Index()
         {
-            var employees = _employeeService.GetAllEmployees(false);
-            var departments = _departmentService.GetAllDepartments(false);
-
-
-            var employeeVMs = employees.Select(e => new Employee
-            {
-                EmployeeId = e.Id,
-                Name = e.Name,
-                EmailId = e.EmailId,
-                MobileNumber = e.MobileNumber,
-                Position = e.Position,
-                DepartmentId = e.DepartmentId,
-                Department = departments
-         .Where(d => d.DepartmentId == e.DepartmentId)
-         .Select(d => new Department
-         {
-             DepartmentId = d.DepartmentId,
-             DeptName = d.DeptName,
-             HODName = d.HODName,
-             PhoneExtensionNo = d.PhoneExtensionNo
-         })
-         .FirstOrDefault()
-            }).ToList();
-
-
-            return View(employeeVMs);
+            var employees = _employeeService.GetAllEmployees(false);           
+            return View(employees);
         }
 
         // GET: Employee/Details/{id}
@@ -136,11 +112,11 @@ namespace FinalProject.UI.Controllers
         }
 
         // GET: Employee/Delete/{id}
-        public IActionResult Delete(Guid id)
+        public IActionResult DeleteEmployee(Guid id)
         {
             try
             {
-                var employee = _employeeService.GetEmployeeById(id, trackChanges: false);
+                var employee = _employeeService.GetEmployeeById(id, trackChanges: false);               
                 return View(employee);
             }
             catch (KeyNotFoundException)
@@ -150,7 +126,7 @@ namespace FinalProject.UI.Controllers
         }
 
         // POST: Employee/DeleteConfirmed/{id}
-        [HttpPost, ActionName("DeleteConfirmed")]
+        [HttpPost, ActionName("DeleteEmployee")]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(Guid id)
         {
