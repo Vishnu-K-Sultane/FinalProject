@@ -6,10 +6,10 @@ using FinalProject.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddControllersWithViews(); // Add MVC services
 builder.Services.AddRazorPages();
 
 // Authentication configuration
@@ -34,6 +34,7 @@ builder.Services.AddDbContext<RepositoryContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Register repositories and services
+builder.Services.AddScoped<IServiceManager, ServiceManager>();
 builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
 builder.Services.AddScoped<ILoggerManager, LoggerManager>();
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();
@@ -45,7 +46,7 @@ builder.Services.AddAutoMapper(typeof(FinalProject.Web.API.MappingProfile));
 
 // Add Authorization configuration
 builder.Services.AddAuthorization();
-//to checke login
+// To check login
 builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
@@ -83,6 +84,11 @@ app.UseSession();
 // Authentication & Authorization middlewares
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Map default MVC route
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 // Mapping Razor Pages
 app.MapRazorPages();

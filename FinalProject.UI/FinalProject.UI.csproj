@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Pages\**" />
+    <Content Remove="Pages\**" />
+    <EmbeddedResource Remove="Pages\**" />
+    <None Remove="Pages\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="14.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.5">
@@ -25,9 +32,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Pages\Employees\" />
-    <Folder Include="Pages\Ambulances\" />
-    <Folder Include="Pages\Patients\" />
+    <Folder Include="Pages - Copy\Ambulances\" />
+    <Folder Include="Pages - Copy\Employees\" />
+    <Folder Include="Pages - Copy\Patients\" />
   </ItemGroup>
 
 </Project>
