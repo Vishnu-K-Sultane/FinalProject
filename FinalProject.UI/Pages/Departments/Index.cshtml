@@ -5,17 +5,17 @@
     ViewData["Title"] = "Departments";
 }
 
-<h2 class="text-primary">Departments</h2>
+<h3 class="text-secondary">Departments</h3>
 <a class="btn btn-success mb-3" asp-page="CreateDepartment">➕ Add Department</a>
 
 <table class="table table-bordered table-striped">
-    <thead class="table-dark">
+    <thead class="table-secondary">
         <tr>
             <th>ID</th>
             <th>Name</th>
             <th>HOD</th>
-            <th>PhoneExtensionNo</th>
-            <th>EmpaneledDoctorNames</th>
+            <th>Phone Extension No</th>
+            <th>Empaneled Doctor Names</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -27,7 +27,16 @@
                 <td>@dept.DeptName</td>
                 <td>@dept.HODName</td>
                 <td>@dept.PhoneExtensionNo</td>
-                <td>@dept.EmpaneledDoctorNames</td>
+                <td>
+                    @if (dept.EmpaneledDoctorNames != null && dept.EmpaneledDoctorNames.Any())
+                    {
+                        <span>@string.Join(", ", dept.EmpaneledDoctorNames)</span>
+                    }
+                    else
+                    {
+                        <span>No doctors assigned</span>
+                    }
+                </td>
                 <td>
                     <a class="btn btn-sm btn-primary" asp-page="EditDepartment" asp-route-id="@dept.DepartmentId">Edit</a>
                     <a class="btn btn-sm btn-danger" asp-page="DeleteDepartment" asp-route-id="@dept.DepartmentId">Delete</a>

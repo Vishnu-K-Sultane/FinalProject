@@ -3,6 +3,8 @@ using FinalProject.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace FinalProject.UI.Pages.Departments
 {
@@ -12,8 +14,8 @@ namespace FinalProject.UI.Pages.Departments
         private readonly IDepartmentService _departmentService = departmentService;
 
         [BindProperty]
-        public required DepartmentDto Department { get; set; }
-
+        public required DepartmentDto Department { get; set; }     
+       
         public IActionResult OnPost()
         {
             if (!ModelState.IsValid)
