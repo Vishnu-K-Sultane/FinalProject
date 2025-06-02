@@ -11,6 +11,9 @@ using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//to access back end Services
+
+builder.Services.AddHttpClient();
 // Register UserConfiguration
 //builder.Services.Configure<UserConfigurationDetail>(builder.Configuration.GetSection("UsersDetail"));
 builder.Services.AddSingleton<UserConfigurationDetail>();

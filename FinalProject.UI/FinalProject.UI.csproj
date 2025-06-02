@@ -31,10 +31,4 @@
     <ProjectReference Include="..\FinalProject.Web.API\FinalProject.Web.API.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Pages - Copy\Ambulances\" />
-    <Folder Include="Pages - Copy\Employees\" />
-    <Folder Include="Pages - Copy\Patients\" />
-  </ItemGroup>
-
 </Project>

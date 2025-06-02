@@ -1,144 +1,138 @@
-﻿using FinalProject.Shared;
-using FinalProject.Service.Contract;
+﻿using FinalProject.Entities.Models;
 using Microsoft.AspNetCore.Mvc;
-using System;
+using System.Net.Http;
+using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using FinalProject.Entities.Models;
 
 namespace FinalProject.UI.Controllers
 {
     public class EmployeeController : Controller
     {
-        private readonly IEmployeeService _employeeService;
-        private readonly IDepartmentService _departmentService; // For loading departments on Create/Edit views
+        private readonly HttpClient _employeeClient;
+        private readonly HttpClient _departmentClient;
 
-        public EmployeeController(IEmployeeService employeeService, IDepartmentService departmentService)
+        public EmployeeController(IHttpClientFactory httpClientFactory)
         {
-            _employeeService = employeeService;
-            _departmentService = departmentService;
+            _employeeClient = httpClientFactory.CreateClient();
+            _employeeClient.BaseAddress = new Uri("https://localhost:5001/api/employees/");
+
+            _departmentClient = httpClientFactory.CreateClient();
+            _departmentClient.BaseAddress = new Uri("https://localhost:5001/api/departments/");
         }
 
-        // GET: Employee
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var employees = _employeeService.GetAllEmployees(false);           
+            var response = await _employeeClient.GetAsync("");
+            if (!response.IsSuccessStatusCode) return View("Error");
+
+            var json = await response.Content.ReadAsStringAsync();
+            var employees = JsonSerializer.Deserialize<List<EmployeeDto>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
             return View(employees);
         }
 
-        // GET: Employee/Details/{id}
-        public IActionResult Details(Guid id)
+        public async Task<IActionResult> Details(Guid id)
         {
-            try
-            {
-                var employee = _employeeService.GetEmployeeById(id, trackChanges: false);
-                return View(employee);
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
+            var response = await _employeeClient.GetAsync($"{id}");
+            if (!response.IsSuccessStatusCode) return NotFound();
+
+            var json = await response.Content.ReadAsStringAsync();
+            var employee = JsonSerializer.Deserialize<EmployeeDto>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+            return View(employee);
         }
 
-        // GET: Employee/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["Departments"] = _departmentService.GetAllDepartments(false);
+            ViewData["Departments"] = await LoadDepartments();
             return View();
         }
 
-        // POST: Employee/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(EmployeeDto employeeDto)
+        public async Task<IActionResult> Create(EmployeeDto employeeDto)
         {
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _employeeService.CreateEmployee(employeeDto);
+                var content = new StringContent(JsonSerializer.Serialize(employeeDto), Encoding.UTF8, "application/json");
+                var response = await _employeeClient.PostAsync("", content);
+
+                if (response.IsSuccessStatusCode)
                     return RedirectToAction(nameof(Index));
-                }
-                catch (ArgumentException ex)
-                {
-                    ModelState.AddModelError(string.Empty, ex.Message);
-                }
+
+                var error = await response.Content.ReadAsStringAsync();
+                ModelState.AddModelError(string.Empty, error);
             }
-            ViewData["Departments"] = _departmentService.GetAllDepartments(false);
+
+            ViewData["Departments"] = await LoadDepartments();
             return View(employeeDto);
         }
 
-        // GET: Employee/Edit/{id}
-        public IActionResult Edit(Guid id)
+        public async Task<IActionResult> Edit(Guid id)
         {
-            try
-            {
-                var employee = _employeeService.GetEmployeeById(id, trackChanges: false);
-                ViewData["Departments"] = _departmentService.GetAllDepartments(false);
-                return View(employee);
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
+            var response = await _employeeClient.GetAsync($"{id}");
+            if (!response.IsSuccessStatusCode) return NotFound();
+
+            var json = await response.Content.ReadAsStringAsync();
+            var employee = JsonSerializer.Deserialize<EmployeeDto>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+            ViewData["Departments"] = await LoadDepartments();
+            return View(employee);
         }
 
-        // POST: Employee/Edit/{id}
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Guid id, EmployeeDto employeeDto)
+        public async Task<IActionResult> Edit(Guid id, EmployeeDto employeeDto)
         {
-            if (id != employeeDto.Id)
-                return BadRequest();
+            if (id != employeeDto.Id) return BadRequest();
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _employeeService.UpdateEmployee(id, employeeDto, trackChanges: true);
+                var content = new StringContent(JsonSerializer.Serialize(employeeDto), Encoding.UTF8, "application/json");
+                var response = await _employeeClient.PutAsync($"{id}", content);
+
+                if (response.IsSuccessStatusCode)
                     return RedirectToAction(nameof(Index));
-                }
-                catch (KeyNotFoundException)
-                {
-                    return NotFound();
-                }
-                catch (ArgumentException ex)
-                {
-                    ModelState.AddModelError(string.Empty, ex.Message);
-                }
+
+                var error = await response.Content.ReadAsStringAsync();
+                ModelState.AddModelError(string.Empty, error);
             }
-            ViewData["Departments"] = _departmentService.GetAllDepartments(false);
+
+            ViewData["Departments"] = await LoadDepartments();
             return View(employeeDto);
         }
 
-        // GET: Employee/Delete/{id}
-        public IActionResult DeleteEmployee(Guid id)
+        public async Task<IActionResult> DeleteEmployee(Guid id)
         {
-            try
-            {
-                var employee = _employeeService.GetEmployeeById(id, trackChanges: false);               
-                return View(employee);
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
+            var response = await _employeeClient.GetAsync($"{id}");
+            if (!response.IsSuccessStatusCode) return NotFound();
+
+            var json = await response.Content.ReadAsStringAsync();
+            var employee = JsonSerializer.Deserialize<EmployeeDto>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+            return View(employee);
         }
 
-        // POST: Employee/DeleteConfirmed/{id}
         [HttpPost, ActionName("DeleteEmployee")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(Guid id)
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            try
-            {
-                _employeeService.DeleteEmployee(id, trackChanges: true);
+            var response = await _employeeClient.DeleteAsync($"{id}");
+            if (response.IsSuccessStatusCode)
                 return RedirectToAction(nameof(Index));
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
+
+            return NotFound();
+        }
+
+        private async Task<List<DepartmentDto>> LoadDepartments()
+        {
+            var response = await _departmentClient.GetAsync("");
+            if (!response.IsSuccessStatusCode) return new List<DepartmentDto>();
+
+            var json = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<List<DepartmentDto>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }
     }
 }
