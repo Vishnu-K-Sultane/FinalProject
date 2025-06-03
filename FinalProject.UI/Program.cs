@@ -41,19 +41,19 @@ builder.Services.AddSession(options =>
 });
 
 // Register your EF Core DbContext here
-builder.Services.AddDbContext<RepositoryContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+//builder.Services.AddDbContext<RepositoryContext>(options =>
+//    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Register repositories and services
-builder.Services.AddScoped<IServiceManager, ServiceManager>();
-builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
-builder.Services.AddScoped<ILoggerManager, LoggerManager>();
-builder.Services.AddScoped<IDepartmentService, DepartmentService>();
-builder.Services.AddScoped<IRoomService, RoomService>();
-builder.Services.AddScoped<IEmployeeService, EmployeeService>();  // Add other services here
+//builder.Services.AddScoped<IServiceManager, ServiceManager>();
+//builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
+//builder.Services.AddScoped<ILoggerManager, LoggerManager>();
+//builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+//builder.Services.AddScoped<IRoomService, RoomService>();
+//builder.Services.AddScoped<IEmployeeService, EmployeeService>();  // Add other services here
 
 // Add AutoMapper
-builder.Services.AddAutoMapper(typeof(FinalProject.Web.API.MappingProfile));
+//builder.Services.AddAutoMapper(typeof(FinalProject.Web.API.MappingProfile));
 
 // Add Authorization configuration
 builder.Services.AddAuthorization();
@@ -78,12 +78,12 @@ app.Use(async (context, next) =>
 {
     await next();
 
-    if (context.User.Identity?.IsAuthenticated == true)
-    {
-        context.Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
-        context.Response.Headers["Pragma"] = "no-cache";
-        context.Response.Headers["Expires"] = "0";
-    }
+    //if (context.User.Identity?.IsAuthenticated == true)
+    //{
+    //    context.Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
+    //    context.Response.Headers["Pragma"] = "no-cache";
+    //    context.Response.Headers["Expires"] = "0";
+    //}
 });
 
 // Routing

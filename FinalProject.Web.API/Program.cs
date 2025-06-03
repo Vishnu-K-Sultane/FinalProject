@@ -59,7 +59,7 @@ else
 app.UseHttpsRedirection();
 
 // Enable serving static files
-app.UseStaticFiles();
+//app.UseStaticFiles();
 
 // Configure forwarded headers to support reverse proxy scenarios
 app.UseForwardedHeaders(new ForwardedHeadersOptions
